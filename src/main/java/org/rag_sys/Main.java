@@ -1,8 +1,6 @@
 package org.rag_sys;
 
-import dev.langchain4j.chain.ConversationalRetrievalChain;
 import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
@@ -15,9 +13,7 @@ import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
-import dev.langchain4j.model.ollama.OllamaModel;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
-import dev.langchain4j.rag.query.Query;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.*;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
@@ -38,7 +34,7 @@ public class Main {
 
         System.out.println("Initialisation du système RAG...");
 
-        var path = Paths.get(Main.class.getClassLoader().getResource("").toURI());
+        var path = Paths.get(Main.class.getClassLoader().getResource("story/").toURI());
         var modelName = "mistral";
         var embeddingModel = "nomic-embed-text";
 //        var question = "parle moi de l'Opération Cyclone";
@@ -67,7 +63,6 @@ public class Main {
 
         System.out.println("To use the RAG system, you can now ask questions about the documents.");
         System.out.println("Type your question and press Enter. Type 'exit' or 'quit' to exit the application.");
-//        DocumentAnalyser ragChain = setupRagChain(embeddingStore, modelName, embeddingModelInstance);
         Scanner scanner = new Scanner(System.in);
 
         do {
@@ -116,16 +111,6 @@ public class Main {
         }
 
     }
-
-    // create chunked documents
-    // private List<Document> chunkDocuments(List<Document> documents, int
-    // chunkSize, int chunkOverlap) {
-    // return documents.stream()
-    // .flatMap(document -> document.toTextSegment().chunk(chunkSize,
-    // chunkOverlap).stream())
-    // .toList();
-    // }
-
     // create vector store using ollama embedding model and pgvector store
 
     private static EmbeddingModel createEmbeddingModel(String embeddingModelName) {
@@ -152,15 +137,6 @@ public class Main {
 
             List<Embedding> embeddings= embeddingModelInstance.embedAll(textSegments).content();
             // create pgvector store
-//            EmbeddingStore embeddingStore = PgVectorEmbeddingStore.builder()
-//                    .host(pgVectorContainer.getHost())
-//                    .port(pgVectorContainer.getMappedPort(5432))
-//                    .user(pgVectorContainer.getUsername())
-//                    .password(pgVectorContainer.getPassword())
-//                    .table("rag_embeddings")
-//                    .database("postgres")
-//                    .dimension(embeddingModelInstance.dimension())
-//                    .build();
             EmbeddingStore embeddingStore = PgVectorEmbeddingStore.builder()
                     .host("localhost")
                     .port(5432)
@@ -193,38 +169,11 @@ public class Main {
                 .temperature(0.2)
                 .build();
 
-        String retriverPromptTemplate = """
-                reply to the user question using the provided documents.
-                If the documents do not contain relevant information, say "I don't know".
-                Question: {{question}}
-                """;
-
-//        var retriever = EmbeddingStoreContentRetriever.builder()
-//                .embeddingStore(embeddingStore)
-//                .embeddingModel(embeddingModel)
-//                .build();
-
         var ragChain = AiServices.builder(DocumentAnalyser.class)
                 .chatModel(ollamaModel)
                 .contentRetriever(retriever)
                 .chatMemory(MessageWindowChatMemory.builder().maxMessages(10).build())
                 .build();
-
-//        String promptTemplate = """
-//                You are a document analyser. Your task is to analyse documents and provide insights based on their content.
-//                The user will ask you questions about the documents.
-//                You will use the provided documents to answer the questions.
-//                Question: {{question}}
-//                Context: {{context}}
-//                Answer: "";
-//                """;
-//        Prompt prompt = PromptTemplate.from(promptTemplate).apply(Map.of(
-//                "question", question,
-//                "context", retriever
-//        ));
-//
-//        var response =ragChain.analyse(prompt.text());
-//        System.out.println("Response: " + response);
 
         return ragChain;
 
