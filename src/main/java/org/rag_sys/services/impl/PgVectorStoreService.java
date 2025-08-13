@@ -8,6 +8,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
+import org.rag_sys.model.DbVectorModel;
 import org.rag_sys.services.VectorStoreService;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -21,13 +22,6 @@ import java.util.List;
  * Principe OCP : Peut être étendu pour supporter d'autres types de stores
  */
 public class PgVectorStoreService implements VectorStoreService {
-    
-    private static final String DEFAULT_HOST = "localhost";
-    private static final int DEFAULT_PORT = 5432;
-    private static final String DEFAULT_USER = "postgres";
-    private static final String DEFAULT_PASSWORD = "password";
-    private static final String DEFAULT_DATABASE = "postgres";
-    private static final String DEFAULT_TABLE = "rag_embeddings";
     private static final int CHUNK_SIZE = 1000;
     private static final int OVERLAP = 200;
     
@@ -37,18 +31,15 @@ public class PgVectorStoreService implements VectorStoreService {
     private final String password;
     private final String database;
     private final String table;
+
     
-    public PgVectorStoreService() {
-        this(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_USER, DEFAULT_PASSWORD, DEFAULT_DATABASE, DEFAULT_TABLE);
-    }
-    
-    public PgVectorStoreService(String host, int port, String user, String password, String database, String table) {
-        this.host = host;
-        this.port = port;
-        this.user = user;
-        this.password = password;
-        this.database = database;
-        this.table = table;
+    public PgVectorStoreService(DbVectorModel dbVectorModel) {
+        this.host = dbVectorModel.getDbHost();
+        this.port = dbVectorModel.getDbPort();
+        this.user = dbVectorModel.getDbUser();
+        this.password = dbVectorModel.getDbPassword();
+        this.database = dbVectorModel.getDbName();
+        this.table = dbVectorModel.getDbTable();
     }
     
     @Override

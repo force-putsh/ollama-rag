@@ -1,0 +1,60 @@
+GÉOMÉTRIE - FIGURES ET CALCULS
+
+Chapitre 1 - Géométrie plane
+
+1.1 Triangle
+- Aire = (base × hauteur) / 2
+- Périmètre = a + b + c
+- Théorème de Pythagore : a² + b² = c² (triangle rectangle)
+- Loi des cosinus : c² = a² + b² - 2ab·cos(C)
+
+1.2 Rectangle
+- Aire = longueur × largeur
+- Périmètre = 2(longueur + largeur)
+- Diagonale = √(longueur² + largeur²)
+
+1.3 Cercle
+- Aire = π × r²
+- Circonférence = 2π × r
+- Arc de cercle = (θ/360°) × 2π × r
+
+1.4 Parallélogramme
+- Aire = base × hauteur
+- Périmètre = 2(a + b)
+
+Chapitre 2 - Géométrie dans l'espace
+
+2.1 Cube
+- Volume = côté³
+- Surface = 6 × côté²
+
+2.2 Parallélépipède rectangle
+- Volume = longueur × largeur × hauteur
+- Surface = 2(lL + lh + Lh)
+
+2.3 Cylindre
+- Volume = π × r² × h
+- Surface latérale = 2π × r × h
+- Surface totale = 2π × r × (r + h)
+
+2.4 Sphère
+- Volume = (4/3) × π × r³
+- Surface = 4π × r²
+
+2.5 Cône
+- Volume = (1/3) × π × r² × h
+- Surface latérale = π × r × g (g = génératrice)
+
+Chapitre 3 - Coordonnées et vecteurs
+
+3.1 Distance entre deux points
+d = √[(x₂-x₁)² + (y₂-y₁)²]
+
+3.2 Équation de droite
+- Forme générale : ax + by + c = 0
+- Forme réduite : y = mx + p (m = pente)
+
+3.3 Vecteurs
+- Addition : u⃗ + v⃗ = (x₁+x₂, y₁+y₂)
+- Produit scalaire : u⃗ · v⃗ = x₁x₂ + y₁y₂
+- Norme : ||u⃗|| = √(x² + y²)

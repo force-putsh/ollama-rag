@@ -5,10 +5,13 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import org.rag_sys.agent.AgentRouter;
+import org.rag_sys.agent.AgentType;
 import org.rag_sys.config.RagConfiguration;
 import org.rag_sys.factory.ServiceFactory;
 import org.rag_sys.model.DocumentAnalyser;
 import org.rag_sys.services.*;
+import org.rag_sys.services.impl.AgentUserInteractionService;
 
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -16,70 +19,121 @@ import java.util.List;
 
 /**
  * Orchestrateur principal du système RAG
- * Principe SRP : Coordonne les différents services
- * Principe DIP : Dépend des abstractions, pas des implémentations
  */
 public class RagSystemOrchestrator {
     
-    private final DocumentLoaderService documentLoaderService;
-    private final EmbeddingModelService embeddingModelService;
-    private final VectorStoreService vectorStoreService;
-    private final RagService ragService;
     private final UserInteractionService userInteractionService;
-    private final RagConfiguration configuration;
+//    private final ServiceFactory serviceFactory;
+    private final AgentRouter agentRouter;
+//    private final RagConfiguration configuration;
     
     public RagSystemOrchestrator(RagConfiguration configuration) {
-        this.configuration = configuration;
-        ServiceFactory serviceFactory = new ServiceFactory(configuration);
-        
-        this.documentLoaderService = serviceFactory.createDocumentLoaderService();
-        this.embeddingModelService = serviceFactory.createEmbeddingModelService();
-        this.vectorStoreService = serviceFactory.createVectorStoreService();
-        this.ragService = serviceFactory.createRagService();
-        this.userInteractionService = serviceFactory.createUserInteractionService();
+//        this.configuration = configuration;
+        this.agentRouter = new AgentRouter(configuration);
+        this.userInteractionService = this.createAgentUserInteractionService(agentRouter);
     }
     
     /**
-     * Lance le système RAG complet
+     * Lance le système RAG complet avec agents spécialisés
      */
     public void start() throws URISyntaxException {
-        System.out.println("Initialisation du système RAG...");
+        System.out.println("🚀 Initialisation du système RAG avec agents spécialisés...");
+
+        // Initialiser les agents spécialisés
+        initializeAgents();
         
-        // 1. Charger les documents
-        String documentsPath = getDocumentsPath();
-        System.out.println("Chargement des documents depuis: " + documentsPath);
-        List<Document> documents = documentLoaderService.loadDocuments(documentsPath);
-        
-        if (documents.isEmpty()) {
-            System.out.println("Aucun document trouvé au chemin spécifié: " + documentsPath);
-            return;
-        }
-        
-        // 2. Créer le modèle d'embedding
+        // Démarrer la session interactive
+        System.out.println("✅ Système prêt ! Démarrage de la session interactive...");
+        userInteractionService.startInteractiveSession(null, null);
+    }
+    
+    private String getDocumentsPath(String directory) throws URISyntaxException {
+        return Paths.get(getClass().getClassLoader().getResource(directory+ "/").toURI()).toString();
+    }
+
+    public DocumentAnalyser registerRagChainForDifferentAgents(String agentDirectory,ServiceFactory serviceFactory, RagConfiguration configuration){
+        DocumentLoaderService documentLoaderService= serviceFactory.createDocumentLoaderService();
+        EmbeddingModelService embeddingModelService = serviceFactory.createEmbeddingModelService();
+        VectorStoreService vectorStoreService = serviceFactory.createVectorStoreService();
+        RagService ragService = serviceFactory.createRagService();
+
+        System.out.println("Chargement des documents pour l'agent: " + agentDirectory);
+        var documents=loadDocuments(documentLoaderService, agentDirectory);
         EmbeddingModel embeddingModel = embeddingModelService.createEmbeddingModel(configuration.getEmbeddingModel());
-        
-        // 3. Créer le vector store
+
+        System.out.println("Création du store d'embeddings pour l'agent: " + agentDirectory);
         EmbeddingStore<TextSegment> embeddingStore = vectorStoreService.createVectorStore(documents, embeddingModel);
         if (embeddingStore == null) {
             System.out.println("Échec de la création du store d'embeddings.");
-            return;
+            throw new RuntimeException("Échec de la création du store d'embeddings.");
         }
         System.out.println("Store d'embeddings créé avec succès.");
-        
-        // 4. Configurer la chaîne RAG
-        System.out.println("Configuration de la chaîne RAG avec le modèle: " + configuration.getModelName());
-        System.out.println("Utilisation du modèle d'embedding: " + configuration.getEmbeddingModel());
-        
+
+        System.out.println("Configuration de la chaîne RAG pour l'agent: " + agentDirectory);
         EmbeddingStoreContentRetriever retriever = ragService.createRetriever(embeddingStore, embeddingModel);
         DocumentAnalyser ragChain = ragService.setupRagChain(retriever, configuration.getModelName());
-        
-        System.out.println("Système RAG initialisé avec succès.");
-        
-        // 5. Démarrer la session interactive
-        userInteractionService.startInteractiveSession(ragChain,retriever);
+        System.out.println("Chaîne RAG configurée avec succès pour l'agent: " + agentDirectory);
+        return ragChain;
+    }
+
+    private List<Document> loadDocuments(DocumentLoaderService documentLoaderService ,String directory){
+        try {
+            String documentsPath = getDocumentsPath(directory);
+            System.out.println("Chargement des documents depuis: " + documentsPath);
+            List<Document> documents = documentLoaderService.loadDocuments(documentsPath);
+
+            if (documents.isEmpty()) {
+                System.out.println("Aucun document trouvé au chemin spécifié: " + documentsPath);
+                return List.of();
+
+            }
+            System.out.println("Documents chargés avec succès: " + documents.size());
+            return documents;
+        }
+        catch (Exception e) {
+            System.err.println("Erreur lors de la résolution du chemin des documents: " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la résolution du chemin des documents: " + e.getMessage(), e);
+        }
     }
     
-    private String getDocumentsPath() throws URISyntaxException {
-        return Paths.get(getClass().getClassLoader().getResource("story/").toURI()).toString();
+    /**
+     * Initialise tous les agents spécialisés
+     */
+    private void initializeAgents() {
+        System.out.println("📦 Initialisation des agents spécialisés...");
+        
+        // Agent Story - utilise le dossier story existant
+        try {
+            RagConfiguration configuration = new RagConfiguration("localhost", 5432, "postgres", "password", "postgres", "story_db");
+            var serviceFactory = new ServiceFactory(configuration);
+            agentRouter.registerAgent(AgentType.STORY, "story", serviceFactory);
+        } catch (Exception e) {
+            System.err.println("⚠️ Échec de l'initialisation de l'agent STORY: " + e.getMessage());
+        }
+        
+        // Agent Math - utilise le dossier math existant
+        try {
+            RagConfiguration configuration = new RagConfiguration("localhost", 5432, "postgres", "password", "postgres", "math_db");
+            var serviceFactory = new ServiceFactory(configuration);
+            agentRouter.registerAgent(AgentType.MATH, "math", serviceFactory);
+        } catch (Exception e) {
+            System.err.println("⚠️ Échec de l'initialisation de l'agent MATH: " + e.getMessage());
+        }
+        
+        // Agent Droit - utilise le nouveau dossier droit
+        try {
+            RagConfiguration configuration = new RagConfiguration("localhost", 5432, "postgres", "password", "postgres", "droit_db");
+            var serviceFactory = new ServiceFactory(configuration);
+            agentRouter.registerAgent(AgentType.DROIT, "droit", serviceFactory);
+        } catch (Exception e) {
+            System.err.println("⚠️ Échec de l'initialisation de l'agent DROIT: " + e.getMessage());
+        }
+        
+        System.out.println("✅ Initialisation des agents terminée.");
+        System.out.println(agentRouter.getAgentStats());
+    }
+
+    private UserInteractionService createAgentUserInteractionService(AgentRouter agentRouter) {
+        return new AgentUserInteractionService(agentRouter);
     }
 }

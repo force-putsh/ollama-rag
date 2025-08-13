@@ -1,0 +1,58 @@
+PROBABILITÉS ET STATISTIQUES
+
+Chapitre 1 - Probabilités de base
+
+1.1 Concepts fondamentaux
+- Expérience aléatoire : expérience dont le résultat ne peut être prédit
+- Univers Ω : ensemble de tous les résultats possibles
+- Événement : sous-ensemble de l'univers
+- Probabilité d'un événement A : P(A) = nombre de cas favorables / nombre de cas possibles
+
+1.2 Propriétés des probabilités
+- 0 ≤ P(A) ≤ 1
+- P(Ω) = 1 (événement certain)
+- P(∅) = 0 (événement impossible)
+- P(A ∪ B) = P(A) + P(B) - P(A ∩ B)
+
+1.3 Probabilités conditionnelles
+P(A|B) = P(A ∩ B) / P(B) (si P(B) > 0)
+
+1.4 Indépendance
+Deux événements A et B sont indépendants si P(A ∩ B) = P(A) × P(B)
+
+Chapitre 2 - Variables aléatoires
+
+2.1 Variable aléatoire discrète
+- Espérance : E(X) = Σ xi × P(X = xi)
+- Variance : Var(X) = E(X²) - [E(X)]²
+- Écart-type : σ(X) = √Var(X)
+
+2.2 Loi binomiale
+X suit B(n,p) si elle compte le nombre de succès en n épreuves indépendantes.
+P(X = k) = C(n,k) × p^k × (1-p)^(n-k)
+E(X) = np
+Var(X) = np(1-p)
+
+2.3 Loi normale
+X suit N(μ,σ²)
+- Densité : f(x) = (1/σ√2π) × e^(-½((x-μ)/σ)²)
+- E(X) = μ
+- Var(X) = σ²
+
+Chapitre 3 - Statistiques descriptives
+
+3.1 Mesures de tendance centrale
+- Moyenne arithmétique : x̄ = (Σxi)/n
+- Médiane : valeur qui partage la série en deux parties égales
+- Mode : valeur la plus fréquente
+
+3.2 Mesures de dispersion
+- Étendue : max - min
+- Variance : s² = Σ(xi - x̄)² / (n-1)
+- Écart-type : s = √s²
+- Coefficient de variation : CV = s/x̄
+
+3.3 Corrélation
+Coefficient de corrélation linéaire :
+r = Σ(xi - x̄)(yi - ȳ) / √[Σ(xi - x̄)² × Σ(yi - ȳ)²]
+-1 ≤ r ≤ 1

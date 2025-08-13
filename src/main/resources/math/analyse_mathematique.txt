@@ -1,0 +1,51 @@
+ANALYSE MATHÉMATIQUE - DÉRIVÉES ET INTÉGRALES
+
+Chapitre 1 - Dérivation
+
+1.1 Définition de la dérivée
+La dérivée d'une fonction f en un point x₀ est :
+f'(x₀) = lim[h→0] (f(x₀+h) - f(x₀))/h
+
+1.2 Règles de dérivation de base
+- Fonction constante : (c)' = 0
+- Fonction identité : (x)' = 1
+- Fonction puissance : (xⁿ)' = n·xⁿ⁻¹
+- Fonction exponentielle : (eˣ)' = eˣ
+- Fonction logarithme : (ln x)' = 1/x
+
+1.3 Règles de calcul
+- Somme : (u + v)' = u' + v'
+- Produit : (u·v)' = u'·v + u·v'
+- Quotient : (u/v)' = (u'·v - u·v')/v²
+- Composée : (f∘g)'(x) = f'(g(x))·g'(x)
+
+Exemples :
+- (x² + 3x)' = 2x + 3
+- (x²·sin x)' = 2x·sin x + x²·cos x
+- (x²/x³)' = (2x·x³ - x²·3x²)/(x³)² = -1/x²
+
+Chapitre 2 - Intégration
+
+2.1 Primitive et intégrale indéfinie
+Une primitive de f est une fonction F telle que F' = f.
+∫ f(x) dx = F(x) + C
+
+2.2 Primitives usuelles
+- ∫ 1 dx = x + C
+- ∫ x dx = x²/2 + C
+- ∫ xⁿ dx = xⁿ⁺¹/(n+1) + C (n ≠ -1)
+- ∫ 1/x dx = ln|x| + C
+- ∫ eˣ dx = eˣ + C
+- ∫ sin x dx = -cos x + C
+- ∫ cos x dx = sin x + C
+
+2.3 Intégrale définie
+∫[a,b] f(x) dx = F(b) - F(a)
+
+2.4 Intégration par parties
+∫ u·v' dx = u·v - ∫ u'·v dx
+
+Exemple : ∫ x·eˣ dx
+u = x, v' = eˣ
+u' = 1, v = eˣ
+∫ x·eˣ dx = x·eˣ - ∫ eˣ dx = x·eˣ - eˣ + C = eˣ(x-1) + C

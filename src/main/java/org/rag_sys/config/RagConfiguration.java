@@ -45,6 +45,12 @@ public class RagConfiguration {
         this.postgresDatabase = postgresDatabase;
         this.postgresTable = postgresTable;
     }
+
+    public RagConfiguration(String postgresHost, int postgresPort, String postgresUser, String postgresPassword, String postgresDatabase, String postgresTable)
+    {
+        this(DEFAULT_MODEL_NAME, DEFAULT_EMBEDDING_MODEL, DEFAULT_OLLAMA_BASE_URL,
+             postgresHost, postgresPort, postgresUser, postgresPassword, postgresDatabase, postgresTable);
+    }
     
     // Getters
     public String getModelName() { return modelName; }
@@ -54,6 +60,6 @@ public class RagConfiguration {
     public int getPostgresPort() { return postgresPort; }
     public String getPostgresUser() { return postgresUser; }
     public String getPostgresPassword() { return postgresPassword; }
-    public String getPostgresDatabase() { return postgresDatabase; }
+    public String getPostgresDatabaseName() { return postgresDatabase; }
     public String getPostgresTable() { return postgresTable; }
 }

@@ -1,0 +1,51 @@
+ALGÈBRE - CONCEPTS FONDAMENTAUX
+
+Chapitre 1 - Équations du premier degré
+
+1.1 Définition
+Une équation du premier degré est une équation de la forme ax + b = 0, où a et b sont des nombres réels et a ≠ 0.
+
+1.2 Résolution
+Pour résoudre ax + b = 0 :
+- Isoler le terme en x : ax = -b
+- Diviser par le coefficient : x = -b/a
+
+Exemple : 3x + 6 = 0
+Solution : 3x = -6, donc x = -2
+
+Chapitre 2 - Équations du second degré
+
+2.1 Forme générale
+Une équation du second degré s'écrit : ax² + bx + c = 0, où a ≠ 0.
+
+2.2 Discriminant
+Le discriminant Δ = b² - 4ac permet de déterminer le nombre de solutions :
+- Si Δ > 0 : deux solutions réelles distinctes
+- Si Δ = 0 : une solution double
+- Si Δ < 0 : aucune solution réelle
+
+2.3 Formules de résolution
+x₁ = (-b + √Δ) / (2a)
+x₂ = (-b - √Δ) / (2a)
+
+Exemple : x² - 5x + 6 = 0
+Δ = 25 - 24 = 1
+x₁ = (5 + 1)/2 = 3
+x₂ = (5 - 1)/2 = 2
+
+Chapitre 3 - Systèmes d'équations linéaires
+
+3.1 Système 2x2
+{ax + by = c
+{dx + ey = f
+
+3.2 Méthode de substitution
+1. Exprimer une variable en fonction de l'autre
+2. Substituer dans la seconde équation
+3. Résoudre pour une variable
+4. Reporter pour trouver l'autre
+
+3.3 Méthode de Cramer
+Si det = ae - bd ≠ 0 :
+x = (ce - bf) / det
+y = (af - cd) / det

@@ -1,6 +1,8 @@
 package org.rag_sys.factory;
 
+import org.rag_sys.agent.AgentRouter;
 import org.rag_sys.config.RagConfiguration;
+import org.rag_sys.model.DbVectorModel;
 import org.rag_sys.services.*;
 import org.rag_sys.services.impl.*;
 
@@ -27,20 +29,20 @@ public class ServiceFactory {
     
     public VectorStoreService createVectorStoreService() {
         return new PgVectorStoreService(
-            configuration.getPostgresHost(),
-            configuration.getPostgresPort(),
-            configuration.getPostgresUser(),
-            configuration.getPostgresPassword(),
-            configuration.getPostgresDatabase(),
-            configuration.getPostgresTable()
+            new DbVectorModel(
+                    configuration.getPostgresDatabaseName(),
+                    configuration.getPostgresUser(),
+                    configuration.getPostgresPassword(),
+                    configuration.getPostgresHost(),
+                    configuration.getPostgresPort(),
+                    configuration.getPostgresTable())
         );
     }
     
     public RagService createRagService() {
         return new OllamaRagService(configuration.getOllamaBaseUrl(), 0.2, 10);
     }
+
     
-    public UserInteractionService createUserInteractionService() {
-        return new ConsoleUserInteractionService();
-    }
+
 }

@@ -11,8 +11,6 @@ import java.util.Scanner;
 
 /**
  * Implémentation du service d'interaction utilisateur via console
- * Principe SRP : Se concentre uniquement sur l'interaction utilisateur
- * Principe OCP : Peut être étendu pour supporter d'autres types d'interfaces
  */
 public class ConsoleUserInteractionService implements UserInteractionService {
     
